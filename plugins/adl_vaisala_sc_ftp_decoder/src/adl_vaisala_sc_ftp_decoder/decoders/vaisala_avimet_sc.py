@@ -49,7 +49,7 @@ class VaisalaAvimetSCDecoder(FTPDecoder):
             if column not in non_data_val_cols:
                 df[column] = pd.to_numeric(df[column], errors='coerce')
         
-        df["TIMESTAMP"] = pd.to_datetime(df["TIMESTAMP"], format="%d/%m/%Y %H:%M")
+        df["observation_time"] = pd.to_datetime(df["TIMESTAMP"], format="%d/%m/%Y %H:%M")
         
         # convert the dataframe to a list of dictionaries
         records = df.to_dict(orient="records", )
