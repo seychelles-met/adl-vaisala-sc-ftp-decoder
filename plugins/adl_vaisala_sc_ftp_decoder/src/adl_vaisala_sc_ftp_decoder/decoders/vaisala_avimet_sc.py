@@ -19,9 +19,11 @@ class VaisalaAvimetSCDecoder(FTPDecoder):
         if station_link.start_date:
             return matching_files
         
+        timezone = station_link.timezone
+        
         # sample file name CLIMSOFT_MSG_10.his. Here 10 is the day of the month
         # we only want the files that contain the date of today in the name
-        zero_padded_day_today = [f"{dj_timezone.now().day:02}"]
+        zero_padded_day_today = [f"{dj_timezone.localtime(timezone=timezone).day:02}"]
         matching_files = [file for file in matching_files if any(date in file for date in zero_padded_day_today)]
         
         return matching_files
