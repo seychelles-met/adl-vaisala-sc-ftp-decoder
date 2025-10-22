@@ -12,9 +12,9 @@ class VaisalaAvimetSCDecoder(FTPDecoder):
     compat_type = "vaisala_avimet_sc"
     display_name = "Vaisala Avimet FTP Decoder - Seychelles"
     
-    def get_matching_files(self, station_link, files):
+    def get_matching_files(self, station_link, files, start_date=None, end_date=None):
         # get all the initial matching files
-        matching_files = super().get_matching_files(station_link, files)
+        matching_files = super().get_matching_files(station_link, files, start_date=start_date, end_date=end_date)
         
         if station_link.start_date:
             return matching_files
