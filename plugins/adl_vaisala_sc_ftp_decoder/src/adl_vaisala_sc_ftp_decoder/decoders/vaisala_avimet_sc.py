@@ -12,16 +12,18 @@ class VaisalaAvimetSCDecoder(FTPDecoder):
     compat_type = "vaisala_avimet_sc"
     display_name = "Vaisala Avimet FTP Decoder - Seychelles"
     
-    def get_matching_files(self, station_link, files):
+    def get_matching_files(self, station_link, files, start_date=None, end_date=None):
         # get all the initial matching files
-        matching_files = super().get_matching_files(station_link, files)
+        matching_files = super().get_matching_files(station_link, files, start_date=start_date, end_date=end_date)
         
         if station_link.start_date:
             return matching_files
         
+        timezone = station_link.timezone
+        
         # sample file name CLIMSOFT_MSG_10.his. Here 10 is the day of the month
         # we only want the files that contain the date of today in the name
-        zero_padded_day_today = [f"{dj_timezone.now().day:02}"]
+        zero_padded_day_today = [f"{dj_timezone.localtime(timezone=timezone).day:02}"]
         matching_files = [file for file in matching_files if any(date in file for date in zero_padded_day_today)]
         
         return matching_files
@@ -49,7 +51,7 @@ class VaisalaAvimetSCDecoder(FTPDecoder):
             if column not in non_data_val_cols:
                 df[column] = pd.to_numeric(df[column], errors='coerce')
         
-        df["TIMESTAMP"] = pd.to_datetime(df["TIMESTAMP"], format="%d/%m/%Y %H:%M")
+        df["observation_time"] = pd.to_datetime(df["TIMESTAMP"], format="%d/%m/%Y %H:%M")
         
         # convert the dataframe to a list of dictionaries
         records = df.to_dict(orient="records", )
