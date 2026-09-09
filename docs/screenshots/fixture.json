@@ -1,0 +1,74 @@
+{
+  "capture": {
+    "connection": "Demo Vaisala Avimet (mock source)",
+    "ingest": true,
+    "probe": true,
+    "station_checks": ["DEMO001"],
+    "wait": 240,
+    "present_interval": 15
+  },
+  "connection": {
+    "model": "adl_ftp_plugin.NetworkFTP",
+    "fields": {
+      "name": "Demo Vaisala Avimet (mock source)",
+      "plugin": "adl_ftp_plugin",
+      "stations_timezone": "Indian/Mahe",
+      "plugin_processing_interval": 1,
+      "connection_type": "ftp",
+      "host": "mock_ftp",
+      "port": 21,
+      "username": "demo",
+      "password": "demo",
+      "passive_mode": true,
+      "timeout": 20,
+      "decoder": "vaisala_avimet_sc"
+    },
+    "children": {
+      "variable_mappings": [
+        {
+          "adl_parameter": "Air Temperature",
+          "file_variable_name": "TEMP 1MIN (°C)",
+          "file_variable_unit": "degC"
+        },
+        {
+          "adl_parameter": "Relative Humidity",
+          "file_variable_name": "RH 1MIN (%)",
+          "file_variable_unit": "percent"
+        },
+        {
+          "adl_parameter": "Atmospheric Pressure",
+          "file_variable_name": "PRESS 1MIN (HPA)",
+          "file_variable_unit": "hPa"
+        },
+        {
+          "adl_parameter": "Precipitation",
+          "file_variable_name": "RAIN 1MIN (MM)",
+          "file_variable_unit": "mm"
+        },
+        {
+          "adl_parameter": "Wind Speed",
+          "file_variable_name": "WS 10MIN (MPS)",
+          "file_variable_unit": "m/s"
+        },
+        {
+          "adl_parameter": "Wind Direction",
+          "file_variable_name": "WD 10MIN (°)",
+          "file_variable_unit": "degree"
+        }
+      ]
+    }
+  },
+  "station_links": [
+    {
+      "model": "adl_ftp_plugin.FTPStationLink",
+      "station": "DEMO001",
+      "fields": {
+        "ftp_path": "/data/avimet",
+        "file_pattern": "CLIMSOFT_MSG_*.his",
+        "listing_strategy": "pattern_only",
+        "skip_already_downloaded_files": false,
+        "start_date": "$NOW-1d"
+      }
+    }
+  ]
+}
