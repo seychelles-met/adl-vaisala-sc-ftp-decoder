@@ -1,17 +1,40 @@
 # ADL Vaisala SC FTP Decoder
 
-## ADL Plugin
+Adds a **decoder** to the [ADL FTP Plugin](https://github.com/wmo-raf/adl-ftp-plugin)
+for the daily history files that the **Vaisala Avimet** automatic weather
+station of the Seychelles Meteorological Authority writes for CLIMSOFT — one
+tab-separated file per day of the month, with a `History file` banner, a
+header of parameter columns and one row per minute. With this package
+installed, an ADL FTP/SFTP connection can select **Vaisala Avimet FTP Decoder
+- Seychelles** as its decoder and collect those files like any other FTP
+source. It provides a decoder only: no connection or station-link model of its
+own.
 
-An [ADL FTP](https://github.com/wmo-raf/adl-ftp-plugin) Decoder plugin for the Seychelles Vaisala Avimet AWS.
+**Operator guide:** [docs/guide.md](docs/guide.md) — prerequisites,
+installation, the file format, every connection and station-link field, the
+variable mappings, collection behaviour, diagnostics and troubleshooting. The
+guide is also published on the central ADL documentation site.
 
-### Description
+## Development setup
 
-This repository contains a decoder plugin for the [ADL FTP](https://github.com/wmo-raf/adl-ftp-plugin), which is used
-to decode data from the Seychelles Vaisala Avimet Automatic Weather Station.
+The plugin runs inside the ADL core image, alongside the ADL FTP Plugin. Build
+the `adl:latest` image from the [ADL core repository](https://github.com/wmo-raf/adl)
+first, then:
 
-The plugin is designed to work with the [ADL](https://github.com/wmo-raf/adl), as an extension to the generic FTP plugin
-and is intended for use in decoding data from the Seychelles Vaisala Avimet AWS.
+```bash
+git clone https://github.com/seychelles-met/adl-vaisala-sc-ftp-decoder.git
+cd adl-vaisala-sc-ftp-decoder
+cp .env.sample .env        # set PLUGIN_BUILD_UID=$(id -u), PLUGIN_BUILD_GID=$(id -g), ADL_DB_PASSWORD
+docker compose build
+docker compose up
+docker compose exec adl adl createsuperuser
+```
 
-[ADL](https://github.com/wmo-raf/adl) is a web based tool helps to automate periodic observation data collection from
-different Automatic Weather Station (AWS) networks, and pushing to different receiving systems.
+The admin is served on `PORT` (default 8080). The plugin source is
+bind-mounted, so code changes reload the dev server. If the build fails with
+`pull access denied` for `adl:latest`, prefix the build with
+`DOCKER_BUILDKIT=0`.
 
+Lint and format from `plugins/adl_vaisala_sc_ftp_decoder/` with `make lint` and
+`make format`. See [CONTRIBUTING.md](CONTRIBUTING.md) — a change to the file
+format, the record keys or the units must update the guide in the same PR.

@@ -1,0 +1,65 @@
+# Screenshot manifest for the ADL Vaisala SC FTP Decoder guide (docs/guide.md).
+# Regenerate from the adl repo:  scripts/capture-plugin-docs.sh ../adl-plugins/adl-vaisala-sc-ftp-decoder
+# Fixture (execution pass): an ADL FTP Plugin connection (id 1) using the vaisala_avimet_sc
+# decoder, pointed at the harness's mock FTP source serving CLIMSOFT_MSG_<DD>.his files
+# (banner line + tab header + minute rows) INCLUDING ONE NAMED FOR THE CAPTURE DAY — with no
+# start date the decoder fetches today's file only. Station link 1, Pattern Only,
+# skip-already-downloaded off. Selectors are blind guesses — fix against the live pages.
+
+defaults:
+  viewport:
+  - 1440
+  - 900
+  padding: 12
+screenshots:
+- name: vaisala_sc_connection_form
+  url: /networkftp/edit/1/
+  setup:
+  - fill: { selector: '#id_password', value: '••••••••••••' }
+  # The panels are flat siblings of the form, so a crop to the form runs all
+  # the way through the inline variable mappings — thousands of pixels, and a
+  # duplicate of the entry below that shoots that panel on its own.
+  - eval: "document.querySelector('#panel-variable_mappings-section').style.display = 'none'"
+  callouts:
+  - highlight: '#id_decoder'
+  capture:
+    selector: "#w-editor-form"
+- name: vaisala_sc_variable_mappings
+  url: /networkftp/edit/1/
+  capture:
+    selector: '#panel-variable_mappings-section'
+- name: vaisala_sc_station_link_form
+  url: /ftpstationlink/edit/1/
+  callouts:
+  - badge:
+      target: '#panel-child-remote_configuration-child-ftp_path-wrapper'
+      n: 1
+  - badge:
+      target: '#id_file_pattern'
+      n: 2
+  - badge:
+      target: '#id_listing_strategy'
+      n: 3
+  - badge:
+      target: '#id_start_date'
+      n: 4
+  - badge:
+      target: '#id_skip_already_downloaded_files'
+      n: 5
+  capture:
+    selector: "#w-editor-form"
+- name: vaisala_sc_ingestion_diagnostic
+  url: /monitoring/connection/1/health/
+  callouts:
+  - highlight: .health-probe-form button
+  capture:
+    selector: .health-diagnostic
+- name: vaisala_sc_station_source_check
+  url: /ftpstationlink/inspect/1/
+  capture:
+    selector: ":nth-match(.collection-status, 2)"
+- name: vaisala_sc_data_files
+  url: /snippets/adl_ftp_plugin/ftpstationdatafile/
+  capture:
+    selector: main
+    max_height: 1200

@@ -1,9 +1,9 @@
 {
   "name": "ADL Vaisala SC FTP Decoder",
-  "description": "TODO",
-  "author": "TODO",
-  "author_url": "TODO",
-  "url": "TODO",
-  "license": "TODO",
-  "contact": "TODO"
+  "description": "ADL FTP decoder for Vaisala Avimet AWS daily history files (Seychelles)",
+  "author": "WMO RAF",
+  "author_url": "https://github.com/wmo-raf",
+  "url": "https://github.com/seychelles-met/adl-vaisala-sc-ftp-decoder",
+  "license": "MIT",
+  "contact": "eotenyo@wmo.int"
 }
